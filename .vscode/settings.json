@@ -1,3 +1,4 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.pythonPath": "c:\\Users\\jason\\OneDrive\\Documents\\repos\\OriginCameras\\Venv\\Scripts\\python.exe"
 }
