@@ -4,6 +4,8 @@ import os
 import pprint
 
 def main():
+    ##This just makes visualizing complex dicts easier - no functional purpose
+    pp = pprint.PrettyPrinter(indent=4)
 
     ##Read in Configuration Data
     with open("Config/config.json") as json_data_file:
@@ -17,28 +19,43 @@ def main():
 
     ##initialize array for videos
     inputVideos = []
-    processingItems = []
+    processingItems = {}
 
-    ##Create a master dict to coordinate processing
+    ##Create a master dict to coordinate processing, and for easy logging
     bootsToProcess = [subDir for subDir in os.scandir(inputDir) if subDir.is_dir()]
     for dir in bootsToProcess:
-        processingItem = {}
-        processingItem[dir.name] = {}
-        processingItem[dir.name]['Path']= dir.path
-        processingItem[dir.name]['Cameras']= []
+        processingItems[dir.name] = {}
+        processingItems[dir.name]['Path']= dir.path
+        processingItems[dir.name]['Cameras']= {}
 
         ##Get all the cameras
         cameraFolders = [subDir for subDir in os.scandir(dir) if subDir.is_dir()]
         for subdir in cameraFolders:
             #Get video files for each camera
             videoFiles = [videoFile.name for videoFile in os.scandir(subdir) if videoFile.is_file() and videoFile.name[-4:] == '.mp4']
-            processingItem[dir.name]['Cameras'].append({subdir.name:{'Path':subdir.path,'Files':videoFiles}})
-        processingItems.append(processingItem)
+            processingItems[dir.name]['Cameras'][subdir.name] = {'Path':subdir.path, 'Files':videoFiles}
 
 
 
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(processingItems)
+    ##Begin Processing
+    vc = VideoClasses.VideoCompiler()
+
+
+    for bootOrder in processingItems.keys(): 
+        allVideos = []
+        print(f"Begin Processing Video for BootOrder:{bootOrder}")
+        for camera in processingItems[bootOrder]['Cameras'].keys():
+            #print(processingItems[bootOrder]['Cameras'][camera])
+            path = processingItems[bootOrder]['Cameras'][camera]['Path']
+            cameraVideos = [path + '/' + videoFile for videoFile in processingItems[bootOrder]['Cameras'][camera]['Files']]
+            allVideos = allVideos + cameraVideos
+
+        vc.setVideos(allVideos)
+        vc.writeOutput(outputDir, f'{bootOrder}.mp4')
+
+    #print(allVideos)
+
+    #print(pp.pprint(processingItems))
 
 
     ##Create Video Compiler object and pass all input videos

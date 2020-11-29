@@ -3,6 +3,7 @@ Videos/
 Output/
 Input/
 Venv/
+Logging/
 
 *.mp4
 *.mp3
