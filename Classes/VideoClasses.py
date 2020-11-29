@@ -5,9 +5,9 @@ class VideoCompiler:
     def __init__(self):
         self.videoClips = []
 
-    def setVideos(self, pClips):
-        for clip in pClips:
-            videoClip = VideoFileClip(clip)
+    def setVideos(self, pVideos):
+        for video in pVideos:
+            videoClip = VideoFileClip(f"{video.GetFullPath()}")
             videoClip = videoClip.subclip(0, 5) 
             videoClip = videoClip.crossfadein(2.0) 
             videoClip = videoClip.fadeout(2.0)
@@ -26,8 +26,5 @@ class VideoCompiler:
         outputdir = os.path.join(pTargetDir, pTargetFileName)
         concatVideos.write_videofile(outputdir)
             
-
-###
-
 
 

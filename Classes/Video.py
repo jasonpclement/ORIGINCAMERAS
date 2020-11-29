@@ -1,12 +1,10 @@
 ##This class is fairly incomplete, i have no actual concept of adding effects yet, but establishing the pattern now
 class Video:
-    def __init__(self, pFX):
+    def __init__(self, pVideoName, pPath):
+        self.VideoName = pVideoName
+        self.Path = pPath
         self.fx = []
 
-        if isinstance(pFX, str):
-            CameraFiles.append(pFX)
-        elif isinstance(pFX, list):
-            CameraFiles = pFX
-        else
-            ##probably need some more robust error handling - to do later?
-            raise Exception("Invalid pFX Parameter")
+    def GetFullPath(self):
+        return f"{self.Path}/{self.VideoName}"
+

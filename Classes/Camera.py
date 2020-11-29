@@ -1,13 +1,15 @@
+from Classes import Video
+import os
+
 class Camera:
-    def __init__(self, pCameraName, pCameraPath, pCameraVideos)
+    def __init__(self, pCameraName, pCameraPath):
         self.CameraName = pCameraName
         self.CameraPath = pCameraPath
-        self.CameraVideos = []
+        self.Videos = []
 
-        if isinstance(pCameraVideos, Video):
-            CameraVideos.append(pCameraFiles)
-        elif isinstance(pCameraVideos, list):
-            CameraVideos = pCameraFiles
-        else
-            ##probably need some more robust error handling - to do later?
-            raise Exception("Invalid pCameraVideos Parameter")
+    def SetVideos(self):
+            videoFiles = [videoFile for videoFile in os.scandir(self.CameraPath) if videoFile.is_file()]
+            for videoFile in videoFiles:
+                self.Videos.append(Video.Video(videoFile.name, self.CameraPath))
+
+
