@@ -1,5 +1,7 @@
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+from Defs import ioClasses as io
 import os
+
 
 class VideoCompiler:
     def __init__(self):

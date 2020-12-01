@@ -1,12 +1,11 @@
 from Classes import VideoClasses, BootOrder, Camera
+from Defs import ioClasses as io
 import json
 import os
 import pprint
+import sys
 
 def main():
-    ##This just makes visualizing complex dicts easier - no functional purpose
-    pp = pprint.PrettyPrinter(indent=4)
-
     ##Read in Configuration Data
     with open("Config/config.json") as json_data_file:
         configData = json.load(json_data_file)
@@ -16,6 +15,9 @@ def main():
 
     ##OutputDir
     outputDir = configData['CreationOutputs']
+
+    ##LoggingDir
+    loggingDir = configData['Logging']
 
     ##Create a master dict to coordinate processing, and for easy logging
     bootsToProcess = [subDir for subDir in os.scandir(inputDir) if subDir.is_dir()]
@@ -37,12 +39,25 @@ def main():
         bootOrders.append(bootOrder)
 
     ##Begin Processing
-    
-
     for bootOrder in bootOrders:
-        vc = VideoClasses.VideoCompiler()
-        vc.setVideos(bootOrder.GetAllVideos())
-        vc.writeOutput(outputDir, f'{bootOrder.OrderId}.mp4')
+        #I Won't lie, I have very little concept try catch protocol in python - I'll throw in a div0 = 1/0 just to give this a poor test
+        try:
+            vc = VideoClasses.VideoCompiler()
+            #div0 = 1/0
+
+            vc.setVideos(bootOrder.GetAllVideos())
+            vc.writeOutput(outputDir, f'{bootOrder.OrderId}.mp4')
+        #Oh shh...
+        except:
+            e = sys.exc_info()[0]
+            bootOrder.UpdateStatus('Error', e)
+        #We good
+        else:  
+            bootOrder.UpdateStatus('Complete')
+        #Log the bootOrder
+        finally:
+            #print(io.ClassEncoder().encode(bootOrder))
+            io.BootOrderLog(loggingDir, bootOrder)
 
 
 if __name__ == "__main__": 
